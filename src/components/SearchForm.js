@@ -111,7 +111,7 @@ const SearchForm = () => {
                   <p className="text-gray-700 mb-1">Fecha: <span className="font-semibold">{checkInDate}</span></p>
                   <p className="text-gray-700 mb-4">Temporada: <span className="font-semibold">{hotel.season === 'high' ? 'Alta' : 'Baja'}</span></p>
                   <p className="text-3xl font-extrabold text-green-600 mt-4">
-                    Precio Estimado: ${hotel.estimatedPrice.toFixed(2)} MXN
+                    Precio Estimado: ${hotel.estimatedPrice.toLocaleString('es-CO')} COP
                   </p>
                   <button
                     onClick={() => alert(`¡Reserva para habitación #${hotel.id} confirmada! (Simulado)`)}
