@@ -126,8 +126,13 @@ const HotelDetail = ({ hotel, onBack }) => {
             Habitaciones: <span className="font-semibold">{numRooms}</span>, Personas: <span className="font-semibold">{numPeople}</span>
           </p>
           <p className="text-3xl font-extrabold text-green-600 mt-4">
-            Total: ${totalPrice.toFixed(2)} MXN
-          </p>
+  Total: {totalPrice.toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0
+  })}
+</p>
+
           <button
             onClick={() => alert('¡Reserva realizada con éxito! (Simulado)')}
             className="mt-6 bg-green-600 text-white py-3 px-8 rounded-xl hover:bg-green-700 transition-colors duration-300 text-lg font-semibold shadow-md"
