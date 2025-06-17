@@ -129,7 +129,8 @@ const HotelDetail = ({ hotel, onBack }) => {
   Total: {totalPrice.toLocaleString('es-CO', {
     style: 'currency',
     currency: 'COP',
-    minimumFractionDigits: 0
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 6
   })}
 </p>
 

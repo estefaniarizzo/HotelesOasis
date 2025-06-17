@@ -114,7 +114,8 @@ const SearchForm = () => {
                    Precio Estimado: {hotel.estimatedPrice.toLocaleString('es-CO', {
                     style: 'currency',
                     currency: 'COP',
-                    minimumFractionDigits: 0
+                    minimumFractionDigits: 3,
+                    maximumFractionDigits: 3
                         })}
                   </p>
                   <button
