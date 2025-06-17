@@ -29,8 +29,8 @@ const SearchForm = () => {
       location: location,
       roomType: roomType,
       maxCapacity: hotel.capacidadMaxima,
-      estimatedPrice: 1000, // Aquí podrías calcular con tarifas si tienes endpoint /tarifas
-      season: 'alta' // puedes calcularlo con JS si deseas
+      estimatedPrice: 1000, 
+      season: 'alta' 
     }));
 
     setSearchResults(formattedData);
