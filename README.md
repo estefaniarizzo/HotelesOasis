@@ -96,5 +96,5 @@ HotelesOasis/
 Si tienen preguntas o desean más información, estaré atenta:
 
 👩‍💻 Estefanía Rizzo  
-📧 estefaniarizzo@gmail.com  
+📧 tefa49395@gmail.com  
 🌐 [GitHub](https://github.com/estefaniarizzo)
