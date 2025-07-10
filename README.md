@@ -1,78 +1,100 @@
-# 🏨 Hoteles Oasis - Prueba Técnica Full Stack
 
-Este proyecto es parte de la prueba técnica de Axede, en la cual se desarrolló una aplicación de reservas hoteleras con backend en **Node.js + Express + Sequelize + PostgreSQL**, y frontend en **React + TailwindCSS**.
+# 🏨 Hoteles Oasis - Prueba Técnica para Axede
 
----
+Este proyecto es una aplicación completa de simulación de disponibilidad y reservas de habitaciones. Permite a los usuarios buscar habitaciones disponibles por fecha y sede, filtrar por tipo de alojamiento y simular una reserva.
 
-## 📦 Tecnologías utilizadas
-
-- Backend: **Node.js, Express, Sequelize**
-- Base de datos: **PostgreSQL**
-- Frontend: **React, TailwindCSS**
-- Otros: **Insomnia (testing), Chart.js (visualización)**
+## 🚀 Demo en línea
+- 🌐 [Aplicación desplegada](https://hoteles-oasis.vercel.app)
+- 📁 [Repositorio en GitHub](https://github.com/estefaniarizzo/HotelesOasis)
 
 ---
 
-## 🚀 Instalación y ejecución
+## 🛠️ Tecnologías utilizadas
+
+### Backend:
+- **Node.js + Express**
+- **Sequelize ORM**
+- **SQLite** (utilizado para facilitar la ejecución local sin dependencias adicionales)
+- **API REST** corriendo en `http://localhost:3001`
+
+### Frontend:
+- **React.js**
+- **TailwindCSS**
+- Diseño responsivo y basado en componentes
+
+---
+
+## 📦 Instrucciones de instalación
 
 ### 1. Clonar el repositorio
-
 ```bash
 git clone https://github.com/estefaniarizzo/HotelesOasis.git
-cd hoteles-oasis
+cd HotelesOasis
+```
 
-2. Backend
-bash
-Copiar
-Editar
+### 2. Iniciar el servidor backend
+```bash
 cd backend
 npm install
-node index.js
-El servidor se ejecuta en: http://localhost:3001
+npm start
+```
 
-3. Frontend
-bash
-Copiar
-Editar
+El servidor se ejecutará en `http://localhost:3001`.
+
+### 3. Iniciar la aplicación frontend
+```bash
 cd frontend
 npm install
 npm start
-El frontend se ejecuta en: http://localhost:3000
+```
 
-🧠 Base de datos
-Crear una base de datos en PostgreSQL:
+La aplicación se ejecutará en `http://localhost:3000`.
 
-sql
-Copiar
-Editar
-CREATE DATABASE "HotelesOasis";
-Tablas creadas automáticamente con Sequelize:
-sedes
+---
 
-habitaciones
+## ✅ Funcionalidades implementadas
 
-disponibilidad
+- Búsqueda por sede y fecha
+- Muestra de habitaciones disponibles con tipo, capacidad y precio simulado
+- Formulario con filtros dinámicos
+- Confirmación de reserva simulada
+- Interfaz responsiva
+- Componentes reutilizables en React
+- Estilos aplicados con TailwindCSS
 
-tarifas
+---
 
-Las tablas se sincronizan automáticamente al iniciar el servidor.
+## 📁 Estructura del proyecto
 
-📡 Endpoints disponibles
-Método	Ruta	Descripción
-GET	/sedes	Lista todas las sedes
-POST	/sedes	Crea una o varias sedes
-GET	/habitaciones	Lista habitaciones con su sede
-POST	/habitaciones	Crea una habitación
-GET	/disponibilidad	Filtra habitaciones disponibles
-POST	/disponibilidad	Crea un registro de disponibilidad
-GET	/tarifas	Lista tarifas por sede y temporada
-POST	/tarifas	Crea una tarifa
-GET	/tarifa/estimada	Calcula tarifa estimada (con query)
+```
+HotelesOasis/
+│
+├── backend/                # API construida con Node + Express
+│   ├── models/             # Modelos Sequelize
+│   └── index.js            # Punto de entrada del backend
+│
+├── src/                    # Código fuente del frontend (React)
+│   ├── components/         # Componentes reutilizables
+│   ├── mock/               # Datos simulados de hoteles
+│   └── App.js              # Lógica principal del frontend
+│
+├── README.md
+```
 
-🧪 Pruebas
-Puedes probar los endpoints con Insomnia o Postman.
-Incluye datos de prueba insertados en PostgreSQL, como sedes en Barranquilla, Cali, Cartagena y Bogotá.
+---
 
-✨ Autor
-Desarrollado por Lina Rizo – 2025
-Contacto: tefa49395@gmail.com
+## 🧠 Notas
+
+- Se utilizó **SQLite** para permitir ejecución local sin necesidad de configurar PostgreSQL.
+- El botón de “Reservar” actualmente es solo demostrativo (alert).
+- El código está comentado y modularizado para facilitar su revisión.
+
+---
+
+## 📬 Contacto
+
+Si tienen preguntas o desean más información, estaré atenta:
+
+👩‍💻 Estefanía Rizzo  
+📧 estefaniarizzo@gmail.com  
+🌐 [GitHub](https://github.com/estefaniarizzo)
