@@ -7,47 +7,38 @@ import SearchForm from './components/SearchForm';
 import { hotelsData } from './mock/hotels';
 
 const App = () => {
-  const [activeView, setActiveView] = useState('list'); // 'list', 'detail', 'search'
+  const [currentPage, setCurrentPage] = useState('list'); // 'list', 'detail', or 'search'
   const [selectedHotel, setSelectedHotel] = useState(null);
 
   const handleSelectHotel = (hotel) => {
     setSelectedHotel(hotel);
-    setActiveView('detail');
+    setCurrentPage('detail');
   };
 
   const handleBackToList = () => {
     setSelectedHotel(null);
-    setActiveView('list');
+    setCurrentPage('list');
   };
 
   const handleNavigateSearch = () => {
-    setActiveView('search');
+    setCurrentPage('search');
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
-      <header>
-        <LayoutHeader 
-          onNavigateHome={handleBackToList} 
-          onNavigateSearch={handleNavigateSearch} 
-        />
-      </header>
-
-      <main className="flex-grow py-8 px-4 sm:px-8">
-        {activeView === 'list' && (
+    <div className="min-h-screen flex flex-col">
+      <LayoutHeader onNavigateHome={handleBackToList} onNavigateSearch={handleNavigateSearch} />
+      <main className="flex-grow py-8">
+        {currentPage === 'list' && (
           <HotelList hotels={hotelsData} onSelectHotel={handleSelectHotel} />
         )}
-        {activeView === 'detail' && selectedHotel && (
+        {currentPage === 'detail' && selectedHotel && (
           <HotelDetail hotel={selectedHotel} onBack={handleBackToList} />
         )}
-        {activeView === 'search' && (
+        {currentPage === 'search' && (
           <SearchForm />
         )}
       </main>
-
-      <footer>
-        <LayoutFooter />
-      </footer>
+      <LayoutFooter />
     </div>
   );
 };

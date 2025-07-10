@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const SearchForm = () => {
   const [location, setLocation] = useState('');
@@ -7,12 +7,30 @@ const SearchForm = () => {
   const [roomType, setRoomType] = useState('standard');
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [sedes, setSedes] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Cargar sedes disponibles al montar el componente
+  useEffect(() => {
+    const fetchSedes = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/sedes');
+        const data = await response.json();
+        setSedes(data);
+      } catch (error) {
+        console.error("Error al cargar sedes:", error);
+      }
+    };
+    fetchSedes();
+  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
     setShowResults(false);
+    setLoading(true);
 
     try {
+      // Buscar disponibilidad
       const queryParams = new URLSearchParams({
         sede: location,
         fecha: checkInDate
@@ -21,19 +39,48 @@ const SearchForm = () => {
       const response = await fetch(`http://localhost:3001/disponibilidad?${queryParams}`);
       const data = await response.json();
 
-      const formattedData = data.map(hotel => ({
-        id: hotel.id,
-        tipo: hotel.tipo,
-        location: location,
-        maxCapacity: hotel.capacidadMaxima,
-        estimatedPrice: 1000, // Simulado
-        season: 'alta' // Simulado
+      // Obtener tarifas estimadas para cada habitación
+      const formattedData = await Promise.all(data.map(async (hotel) => {
+        try {
+          const tarifaParams = new URLSearchParams({
+            sedeId: hotel.sedeId,
+            tipoHabitacion: hotel.tipo,
+            temporada: 'alta', // Por defecto, se puede mejorar con lógica de temporadas
+            personas: numPeople.toString()
+          });
+
+          const tarifaResponse = await fetch(`http://localhost:3001/tarifas/estimada?${tarifaParams}`);
+          const tarifaData = await tarifaResponse.json();
+
+          return {
+            id: hotel.id,
+            tipo: hotel.tipo,
+            location: location,
+            maxCapacity: hotel.capacidadMaxima,
+            estimatedPrice: tarifaData.total || 0,
+            season: 'alta',
+            sedeId: hotel.sedeId
+          };
+        } catch (error) {
+          console.error("Error al obtener tarifa:", error);
+          return {
+            id: hotel.id,
+            tipo: hotel.tipo,
+            location: location,
+            maxCapacity: hotel.capacidadMaxima,
+            estimatedPrice: 0,
+            season: 'alta',
+            sedeId: hotel.sedeId
+          };
+        }
       }));
 
       setSearchResults(formattedData);
       setShowResults(true);
     } catch (error) {
       console.error("Error al consultar disponibilidad:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,14 +92,18 @@ const SearchForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Ubicación:</label>
-            <input
-              type="text"
+            <select
               id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Ej. Barranquilla, Cali"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black transition"
-            />
+              required
+            >
+              <option value="">Selecciona una sede</option>
+              {sedes.map(sede => (
+                <option key={sede.id} value={sede.nombre}>{sede.nombre} - {sede.ciudad}</option>
+              ))}
+            </select>
           </div>
           <div>
             <label htmlFor="checkInDate" className="block text-gray-700 text-sm font-semibold mb-2">Fecha de Entrada:</label>
@@ -62,6 +113,7 @@ const SearchForm = () => {
               value={checkInDate}
               onChange={(e) => setCheckInDate(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black transition"
+              required
             />
           </div>
           <div>
@@ -73,6 +125,7 @@ const SearchForm = () => {
               value={numPeople}
               onChange={(e) => setNumPeople(parseInt(e.target.value))}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black transition"
+              required
             />
           </div>
           <div>
@@ -91,9 +144,10 @@ const SearchForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition-colors duration-300 text-lg font-semibold shadow-md"
+          disabled={loading}
+          className="w-full bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition-colors duration-300 text-lg font-semibold shadow-md disabled:opacity-50"
         >
-          Buscar Disponibilidad
+          {loading ? 'Buscando...' : 'Buscar Disponibilidad'}
         </button>
       </form>
 
@@ -109,14 +163,14 @@ const SearchForm = () => {
                   <p className="text-gray-700 mb-1">Tipo de Habitación: <span className="font-semibold">{hotel.tipo.charAt(0).toUpperCase() + hotel.tipo.slice(1)}</span></p>
                   <p className="text-gray-700 mb-1">Capacidad Máxima: <span className="font-semibold">{hotel.maxCapacity}</span> personas</p>
                   <p className="text-gray-700 mb-1">Fecha: <span className="font-semibold">{checkInDate}</span></p>
-                  <p className="text-gray-700 mb-4">Temporada: <span className="font-semibold">{hotel.season === 'high' ? 'Alta' : 'Baja'}</span></p>
+                  <p className="text-gray-700 mb-4">Temporada: <span className="font-semibold">{hotel.season === 'alta' ? 'Alta' : 'Baja'}</span></p>
                   <p className="text-3xl font-extrabold text-green-600 mt-4">
-                   Precio Estimado: {hotel.estimatedPrice.toLocaleString('es-CO', {
+                   Precio Estimado: {hotel.estimatedPrice > 0 ? hotel.estimatedPrice.toLocaleString('es-CO', {
                     style: 'currency',
                     currency: 'COP',
-                    minimumFractionDigits: 3,
-                    maximumFractionDigits: 3
-                        })}
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                        }) : 'No disponible'}
                   </p>
                   <button
                     onClick={() => alert(`¡Reserva para habitación #${hotel.id} confirmada! (Simulado)`)}
@@ -137,3 +191,4 @@ const SearchForm = () => {
 };
 
 export default SearchForm;
+
